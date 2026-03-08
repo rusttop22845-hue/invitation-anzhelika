@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Приглашение для Анжелики</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:linear-gradient(#0b0014,#2a0014);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Poppins, sans-serif;
+  color:white;
+  overflow:hidden;
+}
+.screen{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+  width:95%;
+  max-width:500px;
+  animation:fade 1s ease;
+}
+.screen.active{display:flex;}
+h1{font-family:'Great Vibes',cursive;font-size:48px;margin:0;}
+.subtitle{margin-top:10px;font-size:18px;opacity:0.9;}
+button{margin-top:15px;padding:12px 20px;font-size:16px;border:none;border-radius:8px;background:#c4002f;color:white;cursor:pointer;transition:0.3s;}
+button:hover{background:#ff0040;}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:15px;}
+.calendar button{padding:12px 0;background:rgba(255,0,80,0.3);border:none;border-radius:8px;cursor:pointer;transition:0.3s;font-size:16px;color:white;}
+.calendar button:hover{background:#ff0040;}
+.calendar button.selected{background:#ff0070;font-weight:bold;}
+.result{margin-top:15px;font-size:18px;color:#ffd1d1;}
+.rose{position:absolute;top:-40px;font-size:22px;animation:fall linear infinite;opacity:0.9;}
+@keyframes fall{0%{transform:translateY(-40px) rotate(0deg)}100%{transform:translateY(110vh) rotate(360deg)}}
+@keyframes fade{from{opacity:0; transform:translateY(20px)}to{opacity:1; transform:translateY(0)}}
+.envelope{width:260px;height:180px;background:#b3003c;position:relative;cursor:pointer;border-radius:6px;display:flex;justify-content:center;align-items:center;box-shadow:0 0 30px rgba(255,0,80,0.5);}
+.envelope:before{content:"";position:absolute;top:0;left:0;width:0;height:0;border-left:130px solid transparent;border-right:130px solid transparent;border-top:90px solid #ff2a6d;transform-origin:top;transition:1s;}
+.envelope.open:before{transform:rotateX(180deg);}
+.label{position:absolute;font-family:'Great Vibes',cursive;font-size:32px;}
+</style>
+</head>
+<body>
+
+<!-- Шаг 1: Конверт -->
+<div id="screen1" class="screen active">
+  <div id="envelope" class="envelope" onclick="openEnvelope()">
+    <div class="label">Открой</div>
+  </div>
+</div>
+
+<!-- Шаг 2: Приглашение с кнопкой Далее -->
+<div id="screen2" class="screen">
+  <h1>Анжелика</h1>
+  <div class="subtitle">У меня есть особенное приглашение для тебя…<br>Я хочу провести с тобой <b>ужин при свечах</b> 🕯️</div>
+  <button onclick="nextScreen()">Далее</button>
+</div>
+
+<!-- Шаг 3: Календарь выбора даты -->
+<div id="screen3" class="screen">
+  <p>Выбери дату в марте 2026:</p>
+  <div class="calendar" id="calendar"></div>
+</div>
+
+<!-- Шаг 4: Подтверждение -->
+<div id="screen4" class="screen">
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+function openEnvelope(){
+  document.getElementById("envelope").classList.add("open");
+  setTimeout(()=>{showScreen(2)},900);
+}
+function nextScreen(){
+  showScreen(3);
+}
+function showScreen(num){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("screen"+num).classList.add("active");
+}
+
+// Создаем календарь марта 2026
+const calendarDiv=document.getElementById("calendar");
+for(let d=1; d<=31; d++){
+  const btn=document.createElement("button");
+  btn.textContent=d;
+  btn.onclick=()=>{
+    showScreen(4);
+    document.getElementById("result").innerHTML=
+      "💌 Прекрасно! Наш ужин состоится <b>"+d+" марта 2026</b><br>Я буду ждать тебя ❤️";
+  };
+  calendarDiv.appendChild(btn);
+}
+
+// падающие розы
+function createRose(){
+  const rose=document.createElement("div");
+  rose.classList.add("rose");
+  rose.innerHTML="🌹";
+  rose.style.left=Math.random()*100+"vw";
+  rose.style.animationDuration=(4+Math.random()*4)+"s";
+  document.body.appendChild(rose);
+  setTimeout(()=>{rose.remove()},8000);
+}
+setInterval(createRose,500);
+</script>
+
+</body>
+</html>
